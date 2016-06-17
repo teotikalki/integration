@@ -63,7 +63,7 @@ public class FileActivityChildPlugin extends AbstractNotificationChildPlugin {
   private static final Log   LOG                          = ExoLogger.getLogger(FileActivityChildPlugin.class);
   public final static ArgumentLiteral<String> ACTIVITY_ID = new ArgumentLiteral<String>(String.class, "activityId");
   public final static String PRIVATE_FOLDER_PATH          = "/Private/";
-  public final static String ACTIVITY_URL                 = "view_full_activity";
+  public final static String ACTIVITY_FILE_URL            = "view_file_activity";
   public static final String ID                           = "files:spaces";
   public static final String MESSAGE                      = "MESSAGE";
   public static final String REPOSITORY                   = "REPOSITORY";
@@ -123,7 +123,7 @@ public class FileActivityChildPlugin extends AbstractNotificationChildPlugin {
       // File uploaded to Content Explorer hasn't MESSAGE field
       String message = templateParams.get(MESSAGE) != null ? NotificationUtils.processLinkTitle(templateParams.get(MESSAGE)) : "";
       
-      templateContext.put("ACTIVITY_URL", LinkProviderUtils.getRedirectUrl(ACTIVITY_URL, activity.getId()));
+      templateContext.put("ACTIVITY_URL", LinkProviderUtils.getRedirectUrl(ACTIVITY_FILE_URL, getContentPath()));
       templateContext.put("ACTIVITY_TITLE", message);
       templateContext.put("DOCUMENT_TITLE", this.documentTitle);
       templateContext.put("SUMMARY", Utils.getSummary(currentNode));
@@ -314,6 +314,14 @@ public class FileActivityChildPlugin extends AbstractNotificationChildPlugin {
     }
 
     return friendlyService.getFriendlyUri(link);
+  }
+
+  private String getContentPath() throws Exception {
+    return capitalizeFirstLetter(workspace) + "/" + contentNode.getUUID();
+  }
+
+  private String capitalizeFirstLetter(String str) throws Exception {
+    return str.substring(0, 1).toUpperCase() + str.substring(1);
   }
 
   private int getImageWidth(Node node) {
