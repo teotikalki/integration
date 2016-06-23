@@ -53,6 +53,7 @@ import org.exoplatform.services.wcm.utils.WCMCoreUtils;
 import org.exoplatform.social.core.activity.model.ExoSocialActivity;
 import org.exoplatform.social.core.manager.ActivityManager;
 import org.exoplatform.social.notification.LinkProviderUtils;
+import org.exoplatform.social.service.rest.Util;
 import org.exoplatform.wcm.ext.component.activity.listener.Utils;
 import org.exoplatform.webui.cssfile.CssClassIconFile;
 import org.exoplatform.webui.cssfile.CssClassManager;
@@ -122,8 +123,12 @@ public class FileActivityChildPlugin extends AbstractNotificationChildPlugin {
       
       // File uploaded to Content Explorer hasn't MESSAGE field
       String message = templateParams.get(MESSAGE) != null ? NotificationUtils.processLinkTitle(templateParams.get(MESSAGE)) : "";
-      
-      templateContext.put("ACTIVITY_URL", LinkProviderUtils.getRedirectUrl(ACTIVITY_FILE_URL, getContentPath()));
+      if (workspace != null) {
+        templateContext.put("ACTIVITY_URL", LinkProviderUtils.getRedirectUrl(ACTIVITY_FILE_URL, getContentPath()));
+      } else {
+        templateContext.put("ACTIVITY_URL", getContentSpacePath(templateParams.get("workspace").toString(),
+                templateParams.get("nodePath").toString()));
+      }
       templateContext.put("ACTIVITY_TITLE", message);
       templateContext.put("DOCUMENT_TITLE", this.documentTitle);
       templateContext.put("SUMMARY", Utils.getSummary(currentNode));
@@ -318,6 +323,12 @@ public class FileActivityChildPlugin extends AbstractNotificationChildPlugin {
 
   private String getContentPath() throws Exception {
     return capitalizeFirstLetter(workspace) + "/" + contentNode.getUUID();
+  }
+
+  private String getContentSpacePath(String workspace, String nodepath) throws Exception {
+    String space = nodepath.split("/")[3];
+    return CommonsUtils.getCurrentDomain() + "/" + PortalContainer.getCurrentPortalContainerName() + "/g/:spaces:"
+            + space + "/" +space + "/documents?path=" + capitalizeFirstLetter(workspace) + nodepath;
   }
 
   private String capitalizeFirstLetter(String str) throws Exception {
