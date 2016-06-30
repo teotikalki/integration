@@ -21,6 +21,7 @@ import org.exoplatform.commons.api.notification.model.NotificationInfo;
 import org.exoplatform.commons.api.notification.plugin.AbstractNotificationChildPlugin;
 import org.exoplatform.commons.api.notification.service.template.TemplateContext;
 import org.exoplatform.commons.notification.template.TemplateUtils;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.ext.activity.ForumActivityUtils;
 import org.exoplatform.social.core.activity.model.ExoSocialActivity;
@@ -48,6 +49,8 @@ public class PollActivityChildPlugin extends AbstractNotificationChildPlugin {
         activity = ForumActivityUtils.getActivityManager().getParentActivity(activity);
       }
       templateContext.put("ACTIVITY", activity.getTitle());
+      templateContext.put("ACTIVITY_URL", CommonsUtils.getCurrentDomain() + ForumActivityUtils.getForumService().
+              getTopicByPath(activity.getTemplateParams().get("PollLink"), false).getLink());
       //
       String content = TemplateUtils.processGroovy(templateContext);
       return content;

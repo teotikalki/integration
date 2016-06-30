@@ -25,6 +25,7 @@ import org.exoplatform.commons.api.notification.plugin.AbstractNotificationChild
 import org.exoplatform.commons.api.notification.service.template.TemplateContext;
 import org.exoplatform.commons.notification.template.TemplateUtils;
 import org.exoplatform.commons.utils.CommonsUtils;
+import org.exoplatform.container.PortalContainer;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.social.core.activity.model.ExoSocialActivity;
 import org.exoplatform.social.core.manager.ActivityManager;
@@ -53,7 +54,17 @@ public class ContentActivityChildPlugin extends AbstractNotificationChildPlugin 
       if (activity.isComment()) {
         activity = activityM.getParentActivity(activity);
       }
+      Map<String,String> templateParams = activity.getTemplateParams();
+      String workspace = templateParams.get("workspace");
+      String nodePath = templateParams.get("nodePath");
+
       templateContext.put("ACTIVITY", activity.getTitle());
+      String[] splitedPath = nodePath.split("/");
+      if (splitedPath[1].equals("Groups") && splitedPath[2].equals("spaces")) {
+        templateContext.put("ACTIVITY_URL", getContentSpacePath(workspace, nodePath));
+      } else {
+        templateContext.put("ACTIVITY_URL", getContentPath(workspace, nodePath));
+      }
       //
 
       //
@@ -62,6 +73,22 @@ public class ContentActivityChildPlugin extends AbstractNotificationChildPlugin 
     } catch (Exception e) {
       return (activity != null) ? activity.getTitle() : "";
     }
+  }
+
+  private String getContentPath(String workspace, String nodepath) throws Exception {
+    String space = nodepath.split("/")[3];
+    return CommonsUtils.getCurrentDomain() + "/" + PortalContainer.getCurrentPortalContainerName() + "/documents?path="
+            + capitalizeFirstLetter(workspace) + nodepath + "&notification=true";
+  }
+
+  private String getContentSpacePath(String workspace, String nodepath) throws Exception {
+    String space = nodepath.split("/")[3];
+    return CommonsUtils.getCurrentDomain() + "/" + PortalContainer.getCurrentPortalContainerName() + "/g/:spaces:"
+            + space + "/" +space + "/documents?path=" + capitalizeFirstLetter(workspace) + nodepath + "&notification=true";
+  }
+
+  private String capitalizeFirstLetter(String str) throws Exception {
+    return str.substring(0, 1).toUpperCase() + str.substring(1);
   }
 
   public String getActivityParamValue(String key) {

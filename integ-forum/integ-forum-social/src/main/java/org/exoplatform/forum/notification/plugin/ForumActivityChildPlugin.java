@@ -21,6 +21,7 @@ import org.exoplatform.commons.api.notification.model.NotificationInfo;
 import org.exoplatform.commons.api.notification.plugin.AbstractNotificationChildPlugin;
 import org.exoplatform.commons.api.notification.service.template.TemplateContext;
 import org.exoplatform.commons.notification.template.TemplateUtils;
+import org.exoplatform.commons.utils.CommonsUtils;
 import org.exoplatform.container.xml.InitParams;
 import org.exoplatform.forum.ext.activity.ForumActivityUtils;
 import org.exoplatform.social.core.activity.model.ExoSocialActivity;
@@ -48,18 +49,7 @@ public class ForumActivityChildPlugin extends AbstractNotificationChildPlugin {
         activity = ForumActivityUtils.getActivityManager().getParentActivity(activity);
       }
       templateContext.put("ACTIVITY", activity.getTitle());
-      //
-//      DataStorage dataStorage = CommonsUtils.getService(DataStorage.class);
-//      String topicId = getActivityParamValue(ForumActivityBuilder.TOPIC_ID_KEY);
-//      String categoryId = getActivityParamValue(ForumActivityBuilder.CATE_ID_KEY);
-//      String forumId = getActivityParamValue(ForumActivityBuilder.FORUM_ID_KEY);
-      //
-//      Topic topic = dataStorage.getTopic(categoryId, forumId, topicId, "");
-//
-//      templateContext.put("TOPIC_NAME", topic.getTopicName());
-//      templateContext.put("MESSAGE", topic.getDescription());
-//      templateContext.put("TOPIC_LINK", ForumNotificationUtils.buildTopicLink(activity));
-      //
+      templateContext.put("ACTIVITY_URL", CommonsUtils.getCurrentDomain() + activity.getTemplateParams().get("TopicLink"));
       String content = TemplateUtils.processGroovy(templateContext);
       return content;
     } catch (Exception e) {
