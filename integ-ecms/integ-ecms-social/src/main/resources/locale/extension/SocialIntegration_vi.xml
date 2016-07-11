@@ -131,16 +131,16 @@
 <label>
 <ShareButton>Chia sẻ</ShareButton>
 <CancelButton>Hủy bỏ</CancelButton>
-<TextAreaInit>Add a comment about to this file...</TextAreaInit>
+<TextAreaInit>Thêm một bình luận về tập tin này...</TextAreaInit>
 <ShareWith>Chia sẻ với:</ShareWith>
 <Access>Truy cập</Access>
 <SpaceMember>Thành viên Nhóm</SpaceMember>
-<SelectASpace>Select a Space</SelectASpace>
+<SelectASpace>Chọn một không gian</SelectASpace>
 <SharedADocument>chia sẻ một tài liệu</SharedADocument>
-<NoSpace>Please select at least one space to share</NoSpace>
+<NoSpace>Vui lòng chọn ít nhất một không gian để chia sẻ</NoSpace>
 <option>
-<read>Can View</read>
-<modify>Can Edit</modify>
+<read>Có thể xem</read>
+<modify>Có thể chỉnh sửa</modify>
 </option>
 </label>
 </UIShareDocuments>
